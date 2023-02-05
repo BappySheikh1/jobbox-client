@@ -13,22 +13,19 @@ const Home = () => {
  
   const {brands,stock}=filter
 
-  // useEffect(() => {
-  //  fetch('https://moon-tech-server-ruddy.vercel.app/products')
-  //  .then(res => res.json())
-  //  .then(data => setProducts(data.data))
-  // },[]);
-
   const {data , isLoading,isError,isSuccess,error} = useGetProductsQuery()
   const products =data?.data
   if(isLoading){
     return <p>loading.......</p>
   }
+  if(isError){
+    return <p>Get something error</p>
+  }
 
   const activeClass = "text-white  bg-indigo-500 border-white";
   
   let content;
-// console.log(products);
+
  
 
   if(products.length){

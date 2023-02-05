@@ -1,13 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
-import { useDispatch,  } from "react-redux";
+import { useGetProductsQuery, useRemoveProductMutation } from "../../features/api/apiSlice";
 
 const ProductList = () => { 
- const dispatch = useDispatch()
+//  const dispatch = useDispatch()
+//  const [products,setProducts]=useState([])
 
- const [products,setProducts]=useState([])
+  const {data,isLoading}=useGetProductsQuery()
+  const [removeProductData,{}]=useRemoveProductMutation()
+  const products =data?.data
 
-  
+  if(isLoading){
+    return <p>Loading.....</p>
+  }
 
   return (
     <div className='flex flex-col justify-center items-center h-full w-full '>
@@ -67,7 +72,7 @@ const ProductList = () => {
                   </td>
                   <td className='p-2'>
                     <div className='flex justify-center'>
-                      <button>
+                      <button onClick={()=> removeProductData(_id)}>
                         <svg
                           className='w-8 h-8 hover:text-blue-600 rounded-full hover:bg-gray-100 p-1'
                           fill='none'
