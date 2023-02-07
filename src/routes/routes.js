@@ -1,12 +1,16 @@
 import { createBrowserRouter } from "react-router-dom";
-import Dashboard from "../layout/Dashboard/Dashboard";
-import Main from "../layout/Main/Main";
-import AddProduct from "../pages/Dashboard/AddProduct";
-import ProductList from "../pages/Dashboard/ProductList";
-import About from "../pages/Main/About";
-import Cart from "../pages/Main/Cart";
-import Home from "../pages/Main/Home";
-import TopRated from "../pages/Main/TopRated";
+import Dashboard from "../layout/dashboard/Dashboard";
+import Main from "../layout/main/Main";
+import AccountCreator from "../pages/register/AccountCreator";
+import Home from "../pages/home/Home";
+import JobDetails from "../pages/JobDetails";
+import Jobs from "../pages/Jobs";
+import Login from "../pages/Login";
+import Signup from "../pages/Signup";
+import PrivateRoute from "../utils/PrivateRoute";
+import AddJob from "../pages/employeeDashboard/AddJob";
+import EmployerDashboard from "../pages/employeeDashboard/EmployerDashboard";
+import CandidateDashboard from "../pages/candidateDashboard/CandidateDashboard";
 
 const routes = createBrowserRouter([
   {
@@ -18,30 +22,58 @@ const routes = createBrowserRouter([
         element: <Home />,
       },
       {
-        path: "about",
-        element: <About />,
+        path: "/jobs",
+        element: <Jobs />,
       },
       {
-        path: "top-rated",
-        element: <TopRated />,
+        path: "/job-details/:id",
+        element: <JobDetails />,
       },
       {
-        path: "cart",
-        element: <Cart />,
+        path: "/login",
+        element: <Login />,
+      },
+      {
+        path: "/signup",
+        element: <Signup />,
+      },
+      {
+        path: "/register",
+        element: (
+          <PrivateRoute>
+            <AccountCreator />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "/register/:type",
+        element: (
+          <PrivateRoute>
+            <AccountCreator />
+          </PrivateRoute>
+        ),
       },
     ],
   },
   {
     path: "/dashboard",
-    element: <Dashboard />,
+    element: (
+      <PrivateRoute>
+        <Dashboard />
+      </PrivateRoute>
+    ),
     children: [
       {
-        path: "/dashboard",
-        element: <ProductList />,
+        path: "add-job",
+        element: <AddJob />,
       },
       {
-        path: "add-product",
-        element: <AddProduct />,
+        path: "employer",
+        element: <EmployerDashboard />,
+      },
+      {
+        path: "candidate",
+        element: <CandidateDashboard />,
       },
     ],
   },

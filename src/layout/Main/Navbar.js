@@ -1,48 +1,49 @@
 import React from "react";
-import { Link } from "react-router-dom";
-import { BsFillCartFill } from "react-icons/bs";
-import { IoIosListBox } from "react-icons/io";
-import { BiSearchAlt } from "react-icons/bi";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useLocation } from "react-router-dom";
+import { signOut } from 'firebase/auth'
+import { logOut } from "../../features/auth/authSlice";
+import auth from "../../firebase/firebase.config";
 
 const Navbar = () => {
-  return (
-    <nav className='h-14 bg-indigo-200 rounded-full m-2 max-w-7xl mx-auto px-5'>
-      <ul className='h-full  mx-auto flex justify-between items-center gap-3 font-semibold text-indigo-900'>
-        <h1>Moon Tech</h1>
+  const { pathname } = useLocation();
+  const {email} =useSelector((state)=>state.auth)
+  const dispatch = useDispatch()
+   
+  const handleSignOut =()=>{
+    signOut(auth).then(()=>{
+      dispatch(logOut())
+    });
+  }
 
-        <li className='flex bg-white mx-auto h-8 w-full max-w-lg  rounded-full pr-3'>
-          <input
-            className='h-8 rounded-full w-full text-sm border-0 focus:ring-0 outline-none'
-            type='text'
-            name='search'
-            id='search'
-          />
-          <button>
-            <BiSearchAlt />
-          </button>
+
+  return (
+    <nav
+      className={`h-14 fixed w-full z-[999] ${
+        pathname === "/" ? null : "bg-white"
+      }`}
+    >
+      <ul className='max-w-7xl mx-auto flex gap-3 h-full items-center'>
+        <li className='flex-auto font-semibold text-2xl'>
+          <Link to='/'>JobBox</Link>
         </li>
         <li>
-          <Link to='/'>Home</Link>
+          <Link className='hover:text-primary' to='/jobs'>
+            Jobs
+          </Link>
         </li>
-        <li>
-          <Link to='/top-rated'>Top Rated</Link>
+
+        {
+          email ? <button onClick={handleSignOut} className="hover:text-primary
+          ">LogOut</button> :<li>
+          <Link
+            className='border border-black px-2 py-1 rounded-full hover:border-primary hover:text-white hover:bg-primary hover:px-4 transition-all '
+            to='/login'
+          >
+            Login
+          </Link>
         </li>
-        <li>
-          <Link to='/about'>About</Link>
-        </li>
-        <li>
-          <Link to='/dashboard'>Dashboard</Link>
-        </li>
-        <Link to='/'>
-          <li title='Wishlist' className='bg-indigo-500 p-2 rounded-full'>
-            <IoIosListBox className='text-white' />
-          </li>
-        </Link>
-        <Link to='/cart'>
-          <li title='cart' className='bg-indigo-500 p-2 rounded-full'>
-            <BsFillCartFill className='text-white ' />
-          </li>
-        </Link>
+        }
       </ul>
     </nav>
   );
