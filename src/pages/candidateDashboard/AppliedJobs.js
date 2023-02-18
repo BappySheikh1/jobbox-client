@@ -18,8 +18,8 @@ const AppliedJobs = () => {
     <div>
       <h1 className='text-xl py-5'>Applied jobs</h1>
       <div className='grid grid-cols-2 gap-5 pb-5'>
-        {data?.data?.map((job) => (
-          <JobCard jobData={job} />
+        {data?.data?.map((job,i) => (
+          <JobCard key={i} jobData={job} />
         ))}
       </div>
     </div>

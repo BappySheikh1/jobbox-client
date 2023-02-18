@@ -2,13 +2,20 @@ import React, { useEffect, useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { FaChevronLeft } from "react-icons/fa";
+import { useRegisterMutation } from "../../features/auth/authApi";
+import { useSelector } from "react-redux";
 
 const EmployerRegistration = () => {
   const [countries, setCountries] = useState([]);
-
-  const { handleSubmit, register, control } = useForm();
+  const {user:{email}} =useSelector((state)=>state.auth)
+  const { handleSubmit, register, control } = useForm({
+    defaultValues:{
+      email,
+    }
+  });
   const term = useWatch({ control, name: "term" });
   const navigate = useNavigate();
+  const [postUser,{isLoading, isError}] = useRegisterMutation();
 
   const businessCategory = [
     "Automotive",
@@ -31,6 +38,7 @@ const EmployerRegistration = () => {
     "Travel & Transportation",
   ];
 
+
   const employeeRange = ["1 - 10", "11 - 50", "51 - 100", "Above 100"];
 
   useEffect(() => {
@@ -40,7 +48,9 @@ const EmployerRegistration = () => {
   }, []);
 
   const onSubmit = (data) => {
-    console.log(data);
+    // console.log(data);
+    postUser({...data, role : "employer"})
+   
   };
 
   return (
@@ -74,7 +84,7 @@ const EmployerRegistration = () => {
             <label className='mb-2' htmlFor='email'>
               Email
             </label>
-            <input type='email' id='email' disabled {...register("email")} />
+            <input type='email' defaultValue={email} id='email' disabled {...register("email")} />
           </div>
           <div className='flex flex-col w-full max-w-xs'>
             <h1 className='mb-3'>Gender</h1>
@@ -86,7 +96,7 @@ const EmployerRegistration = () => {
                   {...register("gender")}
                   value='male'
                 />
-                <label className='ml-2 text-lg' for='male'>
+                <label className='ml-2 text-lg' htmlFor='male'>
                   Male
                 </label>
               </div>
@@ -97,7 +107,7 @@ const EmployerRegistration = () => {
                   {...register("gender")}
                   value='female'
                 />
-                <label className='ml-2 text-lg' for='female'>
+                <label className='ml-2 text-lg' htmlFor='female'>
                   Female
                 </label>
               </div>
@@ -108,7 +118,7 @@ const EmployerRegistration = () => {
                   {...register("gender")}
                   value='other'
                 />
-                <label className='ml-2 text-lg' for='other'>
+                <label className='ml-2 text-lg' htmlFor='other'>
                   Other
                 </label>
               </div>
@@ -122,7 +132,7 @@ const EmployerRegistration = () => {
             <input type='text' {...register("companyName")} id='companyName' />
           </div>
           <div className='flex flex-col w-full max-w-xs'>
-            <label className='mb-3' for='employeeRange'>
+            <label className='mb-3' htmlFor='employeeRange'>
               Number of employee
             </label>
             <select {...register("employeeRange")} id='employeeRange'>
@@ -135,7 +145,7 @@ const EmployerRegistration = () => {
           </div>
 
           <div className='flex flex-col w-full max-w-xs'>
-            <label className='mb-3' for='companyCategory'>
+            <label className='mb-3' htmlFor='companyCategory'>
               Company's Category
             </label>
             <select {...register("companyCategory")} id='companyCategory'>
@@ -165,7 +175,7 @@ const EmployerRegistration = () => {
                 {...register("term")}
                 id='terms'
               />
-              <label for='terms'>I agree to terms and conditions</label>
+              <label htmlFor='terms'>I agree to terms and conditions</label>
             </div>
             <button disabled={!term} className='btn' type='submit'>
               Submit
